@@ -5,6 +5,7 @@ require './config'
 module template
 	class create
 		attr_accessor :profile_path
+		attr_accessor :new_template_path
 		# Grab hiera data path from config
 		@hiera_data_path = Config.get_hiera_data_path
 		@keys = []
