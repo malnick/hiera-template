@@ -9,7 +9,7 @@ module template
 		@hiera_data_path = Config.get_hiera_data_path
 		@keys = []
 
-		def create_new_template(:new_template_path)
+		def create(:new_template_path)
 
 			new_file = File.new(:new_template_path, 'w')
 			puts "Writing the new template to: ", :new_template_path
@@ -21,6 +21,7 @@ module template
 
 		def Self.get_data_from_profile(:profile_path)
 			# Parse the profile for all hiera() data keys. 			
+			# Add keys to @keys
 		end
 	end
 
