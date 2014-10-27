@@ -66,7 +66,7 @@ module Template
 					data.delete! ("'")
 					data.delete! (",")
 					debug("Data item after deletes: #{data}")
-					@keys[data] = 
+					@keys[data] = nil 
 					info("Adding #{data}")
 				end
 			end
