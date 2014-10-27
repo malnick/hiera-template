@@ -1,27 +1,61 @@
 require 'yaml'
 require 'logger'
+require "optparse"
+
 $LOAD_PATH << '.'
 
 module Template
 	class Create
 		#include Extras 
-		@log	= Logger.new(STDOUT) 
+		
+		def initialize(profile_path, new_template_path)
+			# Parse options
+			params,files = parseopts(ARGV)
 
-		def initialize(new_template_path, profile_path)
-			@new_template_path 	= new_template_path
-			@profile_path 		= profile_path
+			# Log it
+			@log		= Logger.new(STDOUT) 
+			@log.level	= params[:logger_level] || Logger::INFO
+			if params[:logger_level] == Logger::DEBUG
+				debug("Logger set to DEBUG")
+			end
+			
+			info(params[:logger_level])			
+			
+			# Init some class vars
+			@new_template_path 	= files[1] 
+			@profile_path 		= files[0]
 #			@hiera_data_path 	= Extras.get_hiera_data_path
 			@keys 			= Hash.new 
-					puts "###"
-			puts "Creating new template for #{@profile_path}"
-			puts "New template path #{@new_template_path}"
-			puts "###"
+			
+			# Kick back to stdout 
+			debug("In init definition")
+			info("Creating new template for #{@profile_path}")
+			info("New template path #{@new_template_path}")
+
+			# Run it 
 			parse()
 			write()
 		end
 
+		def parseopts(argv)
+			params = {}
+			parser = OptionParser.new 
+
+			parser.on("-D") { 
+				params[:logger_level] = Logger::DEBUG
+			}
+
+			parser.on("-s") { 
+				params[:squeeze_extra_newlines] = true               
+			}
+
+			files = parser.parse(ARGV)
+
+			[params,files]
+		end
+
 		def parse
-			puts "Parsing #{@profile_path}"
+			info("Parsing #{@profile_path}")
 			profile = File.open(@profile_path)
 			profile.each_line do |line|
 				if line.match(/hiera/)
@@ -29,17 +63,14 @@ module Template
 					data.delete! (")")
 					data.delete! ("\"")
 					data.delete! ("'")
-					#data << ":"
 					@keys[data] = 
-					puts "Adding #{data}"
+					info("Adding #{data}")
 				end
 			end
-			puts "Keys found: "
-			puts @keys
 		end
 
 		def write
-			puts "Writing keys to new template #{@new_template_path}"
+			info("Writing keys to new template #{@new_template_path}")
 			template = File.open(@new_template_path, 'w')
 			@keys.to_hash
 			template.write(@keys.to_yaml)
@@ -53,20 +84,20 @@ module Template
 		end
 
 		def error(message)
-			logger.error("Fatal error occured: #{message}")
+			@log.error(message)
 			abort 
 		end
 
 		def debug(message)
-			logger.debug("DEBUG: ", message)
+			@log.debug(message)
 		end
 
 		def warn(message)
-			logger.warn("WARNING: ", message)
+			@log.warn(message)
 		end
 
 		def info(message)
-			logger.info("INFO: ", message)
+			@log.info(message)
 		end
 
 	end
