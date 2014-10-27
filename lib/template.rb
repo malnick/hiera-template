@@ -7,7 +7,6 @@ $LOAD_PATH << '.'
 module Template
 	class Create
 		#include Extras 
-		
 		def initialize(profile_path, new_template_path)
 			# Parse options
 			params,files = parseopts(ARGV)
@@ -17,9 +16,9 @@ module Template
 			@log.level	= params[:logger_level] || Logger::INFO
 			if params[:logger_level] == Logger::DEBUG
 				debug("Logger set to DEBUG")
+			else
+				info("Logger set to INFO")
 			end
-			
-			info(params[:logger_level])			
 			
 			# Init some class vars
 			@new_template_path 	= files[1] 
@@ -58,11 +57,15 @@ module Template
 			info("Parsing #{@profile_path}")
 			profile = File.open(@profile_path)
 			profile.each_line do |line|
-				if line.match(/hiera/)
+				if line.match(/hiera\(/)
+					debug("Data item found: #{line}")
 					data = line.split("(").last.chomp
+					debug("Data item split to: #{data}")
 					data.delete! (")")
 					data.delete! ("\"")
 					data.delete! ("'")
+					data.delete! (",")
+					debug("Data item after deletes: #{data}")
 					@keys[data] = 
 					info("Adding #{data}")
 				end
@@ -99,6 +102,5 @@ module Template
 		def info(message)
 			@log.info(message)
 		end
-
 	end
 end
