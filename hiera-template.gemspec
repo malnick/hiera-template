@@ -9,8 +9,7 @@ spec.authors       = ["Jeff Malnick"]
 spec.email         = ["malnick@gmail.com"]
 spec.summary       = %q{Create hiera templates}
 spec.license       = "MIT"
-spec.files         = ['lib/NAME.rb']
+spec.files         = ['lib/template.rb']
 spec.executables   = ['bin/NAME']
-spec.test_files    = ['tests/test_NAME.rb']
 spec.require_paths = ["lib"]
 end

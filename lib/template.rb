@@ -1,8 +1,11 @@
+#!/usr/bin/ruby
+
 require 'yaml'
 require 'logger'
-require "optparse"
+require 'optparse'
 
 $LOAD_PATH << '.'
+#require 'populate'
 
 module Template
 	class Create
@@ -65,11 +68,13 @@ module Template
 					data.delete! ("\"")
 					data.delete! ("'")
 					data.delete! (",")
+					data.strip!
 					debug("Data item after deletes: #{data}")
 					@keys[data] = nil 
 					info("Adding #{data}")
 				end
 			end
+			debug("Keys Collected: #{@keys}")
 		end
 
 		def write

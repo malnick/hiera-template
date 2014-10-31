@@ -1,16 +1,16 @@
 require 'yaml'
 require './config'
 
-module populate
+module Populate
 
 
 	# Get the new template path
-	def Template.get_new_template_path()
+	def Populate.get_new_template_path()
 
 	end
 
 	# Populate the new template
-	def Template.populate(Template.get_new_template_path)
+	def Populate.populate(Populate.get_new_template_path)
 
 	end
 	

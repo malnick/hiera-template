@@ -1,0 +1,13 @@
+---
+profiles::csx_copper::copper_config: 
+profiles::csx_copper::force_auth_endpoint: 
+profiles::csx_copper::force_username: 
+profiles::csx_copper::force_password: 
+profiles::csx_copper::debug_level: 
+profiles::csx_copper::debug_format: 
+profiles::csx_copper::catalina_base: 
+profiles::csx_copper::catalina_home: 
+profiles::csx_copper::reloadable: 
+profiles::csx_copper::webapp_dir: 
+profiles::csx_copper::max_perm_size: 
+profiles::csx_copper::copper_version: 
