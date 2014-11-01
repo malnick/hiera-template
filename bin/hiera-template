@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'template'
+
+Template::Create.new(ARGV[1], ARGV[0])
