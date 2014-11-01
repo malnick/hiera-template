@@ -11,11 +11,32 @@ For example, ```profiles::haproxy```.pp only has data that is at the node/$clien
 
 When we're ready to boot a new haproxy node, we can cat templates/haproxy-template.yaml > clientcert.yaml and fill in the values for the keys. 
 
-TODO: 
+## In-Progress
 
-1. Enable a CLI interface to fill in keys
-1. Enable multi-hierarchy builds (for example, profiles::sso has data on three different hierarchies)
-
+1. ```hiera-template populate```
+	1. Enable a CLI interface to fill in keys
+1. Hiera data groups
+	1. Enable multi-hierarchy builds (for example, profiles::sso has data on three different hierarchies)
+	1. Design ideas: include 'data group keys' in the profile itself to distinguish which sets of data belong in which hierarchy.
+		1. hiera-template can then auto-create for each key, represetented by ```#[node]``` or ```#[datacenter]``` tags above the data in the profile. 
+		1. Output from above example would be ```$profile_name-$data_group-template.yaml```
+1. Config directory in user's home directory
+	1. hiera-template.yaml for configuration parameters
+		1. default template dir
+		1. logging modes
+		1. other params
+1. Support for parsing non-explicit hiera() lookups:
+	1. Given the following:
+	
+	```ruby
+	class profiles::my_profile {
+		$variable1,
+		$variable2,
+	...
+	}
+	```
+	
+	
 ## Workflow
 ```hiera-template /path/to/profile /path/to/hieradata/${hierarchy-level}/templates/${profile_name}-template.yaml```
 
