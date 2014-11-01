@@ -25,6 +25,7 @@ module Template
 			@profile_path 		= files[0]
 #			@hiera_data_path 	= Extras.get_hiera_data_path
 			@keys 			= Hash.new 
+			@data_groups		= []
 			
 			# Kick back to stdout 
 			debug("In init definition")
@@ -32,6 +33,7 @@ module Template
 			info("New template path #{@new_template_path}")
 
 			# Run it 
+			data_groups()
 			parse()
 			write()
 		end
@@ -51,6 +53,21 @@ module Template
 			files = parser.parse(ARGV)
 
 			[params,files]
+		end
+
+		def data_groups
+			info("Checking for data groups...")
+			profile = File.open(@profile_path)
+			profile.each_line do |group|
+				if group.match(/\#\[/)
+					debug("Data group found on line: #{group}")
+					data_group = group.split('[').last.delete(']').chomp
+					info("Creating data group found: #{data_group}") 
+					@data_groups.push(data_group)
+				end 
+			end
+			debug("Parsed data groups: #{@data_groups}")
+			profile.close
 		end
 
 		def parse
@@ -74,9 +91,12 @@ module Template
 
 		def write
 			info("Writing keys to new template #{@new_template_path}")
+			puts @keys
 			template = File.open(@new_template_path, 'w')
 			@keys.to_hash
-			template.write(@keys.to_yaml)
+			unless(template.write(@keys.to_yaml))
+				error("Unable to write keys to hash")
+			end
 			template.close
 		end
 

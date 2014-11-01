@@ -2,6 +2,7 @@
 # you should view cs_csx_frontend::productization for key hiera variables to pass in with automatic parameter lookup
 # you should view cs_apt_client for key hiera variables to pass in as well (default set to datapipe commercial configuration)
 class profiles::csx_frontend_base(
+  #[node]
   $csx_db_name                          = hiera('profiles::csx_frontend_base::csx_db_name'),
   $csx_db_user                          = hiera('profiles::csx_frontend_base::csx_db_user'),
   $csx_db_password_hash                 = hiera('profiles::csx_frontend_base::csx_db_password_hash'),
@@ -15,6 +16,7 @@ class profiles::csx_frontend_base(
   $copper_url                           = hiera('profiles::csx_frontend_base::copper_url'),
   $amber_url                            = hiera('profiles::csx_frontend_base::amber_url'),
   $sla_url                              = hiera('profiles::csx_frontend_base::sla_url'),
+  #[datacenter]
   $gm_serverstatus_url                  = hiera('profiles::csx_frontend_base::gm_serverstatus_url'),
   $usage_ms_url                         = hiera('profiles::csx_frontend_base::usage_ms_url'),
   $gm_meeting_url                       = hiera('profiles::csx_frontend_base::gm_meeting_url'),
