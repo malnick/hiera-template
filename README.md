@@ -37,12 +37,16 @@ $copper_url                           = hiera('profiles::csx_frontend_base::copp
 ```
 
 hiera template will create three files:
+
 ```~/.hiera-template/templates/my-profile-node-template.yaml```
+
 ```~/.hiera-template/templates/my-profile-datacenter-template.yaml```
+
 ```~/.hiera-template/templates/my-profile-global-template.yaml```
 
 Copy the templates to your puppet master data dir, and for each: 
-``` cat my-profile-node-template.yaml > my.new.node.com.yaml```
+
+```cat my-profile-node-template.yaml > my.new.node.com.yaml```
 
 Do the same at the datacenter and global levels (but append rather than write on the global file perhaps...)
 
