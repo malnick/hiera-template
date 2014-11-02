@@ -26,7 +26,9 @@ module Template
 			@keys 			= Hash.new 
 			@data_groups		= Hash.new 
 			@data_groups["unknown"] = current_group = []
+			@cwd = File.expand_path File.dirname(__FILE__)
 	
+
 			# Kick back to stdout 
 			debug("In init definition")
 			info("Creating new template for #{@profile_path}")
@@ -90,15 +92,25 @@ module Template
 		end
 
 		def write
-			cwd = File.expand_path File.dirname(__FILE__)
+			# Create dotdir if needed:
+			unless Dir.exists?("#{Dir.home}/.hiera-template")
+				Dir.mkdir(File.join(Dir.home, '.hiera-template'), 0755)
+			end
+			unless Dir.exists?("#{Dir.home}/.hiera-template/templates")
+				Dir.mkdir("#{Dir.home}/.hiera-template/templates", 0755)
+			end
+
+			temp_path = "#{Dir.home}/.hiera-template/templates"
+			profile_name = @profile_path.split("/").last.split(".").first
+
 			@data_groups.each do |k,v|
-				temp_path = "#{cwd}/#{k}-template.yaml"
-				info("Writing keys to new template #{temp_path}")
-				
-				template = File.open("#{temp_path}", "w")
-				unless(template.write(v.to_yaml))
-					error("Unable to write keys to hash")
+				write_hash = Hash.new
+				v.each do |key|
+					write_hash[key] = nil
 				end
+				info("Writing keys to new template #{temp_path}/#{profile_name}-#{k}-template.yaml")
+				template = File.open("#{temp_path}/#{profile_name}-#{k}-template.yaml", "w")
+				template.write(write_hash.to_yaml)
 				template.close
 			end
 		end
