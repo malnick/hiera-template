@@ -1,4 +1,7 @@
 # Hiera-template
+
+```gem install hiera-template```
+
 This tool automatically parses a Puppet profile for hiera() statements and adds the keys to a template data file. 
 
 Hiera-templates are our answer to dealing with building out new profiles and the data needed by each one. Every directory of the hieradata directory gets a templates/ directory. In this directory we add base-line templates that have the data for a given profile. 
