@@ -6,18 +6,12 @@ This tool automatically parses a Puppet profile for hiera() statements and adds 
 
 Hiera-templates are our answer to dealing with building out new profiles and the data needed by each one. Every directory of the hieradata directory gets a templates/ directory. In this directory we add base-line templates that have the data for a given profile. 
 
-For example, ```profiles::haproxy```.pp only has data that is at the node/$clientcert level. We create a data template for this profile like:
-
-```hiera-template /path/to/profiles/manifests/haproxy.pp /path/to/hieradata/nodes/templates/haproxy-template.yaml```
-
-When we're ready to boot a new haproxy node, we can cat templates/haproxy-template.yaml > clientcert.yaml and fill in the values for the keys. 
-
 ## Usage
 To parse a single profile:
 
 ```hiera-template my-profile.pp```
 
-^^ will write template to ~/.hiera-template/templates/my-profile-unknown-template.pp
+^^ will write template to ```~/.hiera-template/templates/my-profile-unknown-template.yaml```
 
 Why unknown? Because no hierarchy keys were in the profile...
 
