@@ -23,18 +23,18 @@ module Template
 			# Init some class vars
 			@new_template_path 	= files[1] 
 			@profile_path 		= files[0]
-#			@hiera_data_path 	= Extras.get_hiera_data_path
 			@keys 			= Hash.new 
-			@data_groups		= []
-			
+			@data_groups		= Hash.new 
+			@data_groups["unknown"] = current_group = []
+	
 			# Kick back to stdout 
 			debug("In init definition")
 			info("Creating new template for #{@profile_path}")
 			info("New template path #{@new_template_path}")
 
 			# Run it 
-			data_groups()
 			parse()
+			debug(@data_groups)
 			write()
 		end
 
@@ -55,49 +55,52 @@ module Template
 			[params,files]
 		end
 
-		def data_groups
-			info("Checking for data groups...")
-			profile = File.open(@profile_path)
-			profile.each_line do |group|
-				if group.match(/\#\[/)
-					debug("Data group found on line: #{group}")
-					data_group = group.split('[').last.delete(']').chomp
-					info("Creating data group found: #{data_group}") 
-					@data_groups.push(data_group)
-				end 
-			end
-			debug("Parsed data groups: #{@data_groups}")
-			profile.close
-		end
-
 		def parse
 			info("Parsing #{@profile_path}")
 			profile = File.open(@profile_path)
-			profile.each_line do |line|
-				if line.match(/hiera\(/)
-					debug("Data item found: #{line}")
-					data = line.split("(").last.chomp
-					debug("Data item split to: #{data}")
-					data.delete! (")")
-					data.delete! ("\"")
-					data.delete! ("'")
-					data.delete! (",")
-					debug("Data item after deletes: #{data}")
-					@keys[data] = nil 
-					info("Adding #{data}")
+
+			# For each data grouop, parse the file
+			profile.each_line do |line| 
+				catch :unknown_group do 
+					# If the line matches the data group, init a new array for the keys in that data group
+					if line.match(/\#\[/)
+						debug("Data group found on line: #{line}")
+						data_group = line.split('[').last.delete(']').chomp
+						info("Creating data group: #{data_group}") 
+						@data_groups[data_group] = @current_group = []
+						debug("Data groups now include: #{@data_groups}")
+
+					# For all other lines, parse it for keys
+					elsif line.match(/hiera\(/)
+						debug("Current data group being added to: #{@current_group}")
+						debug("Data item found: #{line}")
+						data = line.split("(").last.chomp
+						data.delete! (")")
+						data.delete! ("\"")
+						data.delete! ("'")
+						data.delete! (",")
+						
+						@current_group << data
+						
+						info("Adding #{data}")
+						debug("Adding #{data} to #{@current_group} hash")
+					end
 				end
 			end
 		end
 
 		def write
-			info("Writing keys to new template #{@new_template_path}")
-			puts @keys
-			template = File.open(@new_template_path, 'w')
-			@keys.to_hash
-			unless(template.write(@keys.to_yaml))
-				error("Unable to write keys to hash")
+			cwd = File.expand_path File.dirname(__FILE__)
+			@data_groups.each do |k,v|
+				temp_path = "#{cwd}/#{k}-template.yaml"
+				info("Writing keys to new template #{temp_path}")
+				
+				template = File.open("#{temp_path}", "w")
+				unless(template.write(v.to_yaml))
+					error("Unable to write keys to hash")
+				end
+				template.close
 			end
-			template.close
 		end
 
 		def verify(path)

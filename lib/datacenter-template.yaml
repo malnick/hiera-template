@@ -1,0 +1,29 @@
+---
+- profiles::csx_frontend_base::gm_serverstatus_url
+- profiles::csx_frontend_base::usage_ms_url
+- profiles::csx_frontend_base::gm_meeting_url
+- profiles::csx_frontend_base::quartz_ltr_url
+- profiles::csx_frontend_base::default_idp
+- profiles::csx_frontend_base::entity_base_url
+- profiles::csx_frontend_base::saml_keystore_password
+- profiles::csx_frontend_base::saml_keystore_alias
+- profiles::csx_frontend_base::csx_config
+- profiles::csx_frontend_base::idp
+- profiles::csx_frontend_base::saml_keystore
+- profiles::csx_frontend_base::debug_level
+- profiles::csx_frontend_base::debug_format
+- profiles::csx_frontend_base::productization_version
+- profiles::csx_frontend_base::quartz_ltr_job_testsftp
+- profiles::csx_frontend_base::quartz_ltr_job_testsftp_sourcefolder
+- profiles::csx_frontend_base::quartz_fe_url
+- 'profiles::csx_frontend_base::kettle_home '
+- profiles::csx_frontend_base::godeus_home
+- profiles::csx_frontend_base::ltr_log_dir
+- profiles::csx_frontend_base::etl_properties
+- profiles::csx_frontend_base::ltr_reports_dir
+- profiles::csx_frontend_base::nagios_cfg
+- profiles::csx_frontend_base::mysql_client_version
+- profiles::csx_frontend_base::nginx_vhost_name
+- profiles::csx_frontend_base::nginx_cert_name
+- profiles::csx_frontend_base::nginx_key_name
+- profiles::csx_frontend_base::nginx_ssl_ciphers
