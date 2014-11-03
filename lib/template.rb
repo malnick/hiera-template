@@ -25,7 +25,7 @@ module Template
 			@profile_path 		= files[0]
 			@keys 			= Hash.new 
 			@data_groups		= Hash.new 
-			@data_groups["unknown"] = current_group = []
+			@data_groups["unknown"] = @current_group = []
 			@cwd = File.expand_path File.dirname(__FILE__)
 	
 
