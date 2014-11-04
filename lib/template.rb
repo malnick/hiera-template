@@ -4,9 +4,9 @@ require "optparse"
 
 $LOAD_PATH << '.'
 
-module Template
+module Template 
+	require_relative 'populate.rb'
 	class Create
-		#include Extras 
 		def initialize(profile_path, new_template_path)
 			# Parse options
 			params,files = parseopts(ARGV)
