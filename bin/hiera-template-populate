@@ -2,6 +2,6 @@
 require 'optparse'
 require_relative '../lib/populate.rb'
 
-Populate.new_data_file
+Populate.new(ARGV[0])
 
 #files = parser.parse(ARGV)

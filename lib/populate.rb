@@ -1,31 +1,36 @@
-module Populate
+require 'logger'
+require 'yaml'
 
-	def Populate.working()
-		puts "working"
+class Populate
+	def initialize(data_group)
+		@log            = Logger.new(STDOUT)
+		@log.level	= Logger::DEBUG
+		@hiera_dir	= File.join(Dir.home, ".hiera-template")
+		params 		= get_config()
+		debug("Params: #{params}")
+		info("Creating new datafile(s) for #{data_group}")
 	end
 
-	def Populate.new_data_file()
-		get_config()
+	def get_config()
+		params = {}
+		
+		unless Dir.exists?("~/.hiera-template") 
+			Dir.mkdir("~/.hiera-template")
+		end
 		
 
-	end
-
-	def Populate.get_config()
-		params = {}
-		unless Dir.exists?('~/.hiera-template')
-			Logger.info('Please run hiera-tempalte $profile_path to create templates')
-		end
-
 		unless File.exists?('~/.hiera-template/config.yaml')
+			warn("config.yaml not found, creating ~/.hiera-template/config.yaml")
 			params = {
 				'configpath' 	=> '~/.hiera-template/',
 				'templatepath'	=> '~/.hiera-template/templates',
 				'hierarchy'	=> ['global', 'nodes/node', 'datacenters/datacenter' ]
 			}
+			debug("Baseline params hash: #{params}")
+			f = File.open('~/.hiera-template/config.yaml','w')
+			f.write(params.to_yaml)
+			f.close
 
-			File.open('~/.hiera-template/config.yaml','w') {|f|
-				f.write(params.to_yaml)
-			}
 		end
 
 		#File.open("~/.hiera-template/config.yaml", 'r') {|f|
@@ -34,11 +39,24 @@ module Populate
 		#	}
 		#}
 		
-		
+		params
 	end
 
-	def Populate.log
-		@log            = Logger.new(STDOUT)
+	def error(message)
+		@log.error(message)
+		abort
+	end
+
+	def debug(message)
+		@log.debug(message)
+	end
+
+	def warn(message)
+		@log.warn(message)
+	end
+
+	def info(message)
+		@log.info(message)
 	end
 end
 
