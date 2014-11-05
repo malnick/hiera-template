@@ -5,7 +5,6 @@ require "optparse"
 $LOAD_PATH << '.'
 
 module Template 
-	require_relative 'populate.rb'
 	class Create
 		def initialize(profile_path, new_template_path)
 			# Parse options
